@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduExcel Academy</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4F46E5',secondary:'#10B981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background-color: #F9FAFB;
+max-width: 375px;
+margin: 0 auto;
+min-height: 762px;
+position: relative;
+}
+.toast-container {
+position: fixed;
+bottom: 80px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 1000;
+width: calc(100% - 32px);
+max-width: 343px;
+}
+.toast {
+background-color: white;
+border-radius: 8px;
+padding: 16px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+margin-bottom: 8px;
+opacity: 0;
+transform: translateY(16px);
+transition: all 0.3s ease;
+}
+.toast.show {
+opacity: 1;
+transform: translateY(0);
+}
+.progress-bar {
+width: 100%;
+height: 4px;
+background-color: #E5E7EB;
+border-radius: 2px;
+overflow: hidden;
+margin-top: 8px;
+}
+.progress-bar-fill {
+height: 100%;
+background-color: #4F46E5;
+width: 0%;
+transition: width 0.3s ease;
+}
+.nav-item.active {
+color: #4F46E5;
+background-color: rgba(79, 70, 229, 0.1);
+}
+.nav-item.active i {
+color: #4F46E5;
+}
+input:focus {
+outline: none;
+}
+.tab-content {
+display: none;
+}
+.tab-content.active {
+display: block;
+}
+.attendance-day {
+width: 32px;
+height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+}
+.attendance-day.present {
+background-color: rgba(16, 185, 129, 0.2);
+color: #10B981;
+}
+.attendance-day.absent {
+background-color: rgba(239, 68, 68, 0.2);
+color: #EF4444;
+}
+.attendance-day.holiday {
+background-color: rgba(249, 115, 22, 0.2);
+color: #F97316;
+}
+</style>
+</head>
+<body class="relative">
+<!-- Navigation Bar -->
+<nav class="fixed top-0 w-full bg-white shadow-sm z-50 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<button id="nav-toggle" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+<img src="https://static.readdy.ai/image/e74e4486d8158cb12d6ba58f6b97f5b9/8d71c57357fc5cc464515070257f2556.jpeg" alt="AIM Academy Logo" class="h-8">
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center cursor-pointer">
+<i class="ri-notification-3-line ri-lg"></i>
+</button>
+<div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20a%20young%20male%20student%2C%20high%20quality%20portrait%2C%20natural%20lighting%2C%20soft%20smile%2C%20clean%20background&width=100&height=100&seq=1&orientation=squarish" alt="Profile" class="w-full h-full object-cover">
+</div>
+</div>
+</nav>
+<!-- Sidebar Navigation -->
+<div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<img src="https://static.readdy.ai/image/e74e4486d8158cb12d6ba58f6b97f5b9/8d71c57357fc5cc464515070257f2556.jpeg" alt="AIM Academy Logo" class="h-8">
+<button id="close-nav" class="w-8 h-8 flex items-center justify-center cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4 border-b">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20a%20young%20male%20student%2C%20high%20quality%20portrait%2C%20natural%20lighting%2C%20soft%20smile%2C%20clean%20background&width=100&height=100&seq=1&orientation=squarish" alt="Profile" class="w-full h-full object-cover">
+</div>
+<div>
+<h3 class="font-medium">Michael Anderson</h3>
+<p class="text-xs text-gray-500">Grade 12 • Science</p>
+</div>
+</div>
+</div>
+<div class="py-2">
+<a href="#dashboard" class="nav-item active flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-dashboard-line"></i>
+</div>
+<span>Dashboard</span>
+</a>
+<a href="#lectures" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-live-line"></i>
+</div>
+<span>Live Lectures</span>
+</a>
+<a href="#materials" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-book-open-line"></i>
+</div>
+<span>Study Materials</span>
+</a>
+<a href="#homework" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-edit-line"></i>
+</div>
+<span>Homework</span>
+</a>
+<a href="#notices" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-notification-2-line"></i>
+</div>
+<span>Notices</span>
+</a>
+<a href="#attendance" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-check-line"></i>
+</div>
+<span>Attendance</span>
+</a>
+<a href="#results" class="nav-item flex items-center gap-3 px-4 py-3 text-sm cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-bar-chart-line"></i>
+</div>
+<span>Test Results</span>
+</a>
+</div>
+<div class="absolute bottom-0 w-full border-t p-4">
+<a href="#" class="flex items-center gap-3 text-sm text-red-500 cursor-pointer">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-logout-box-line"></i>
+</div>
+<span>Logout</span>
+</a>
+</div>
+</div>
+<!-- Main Content -->
+<main class="pt-16 pb-16 min-h-screen">
+<!-- Dashboard Tab -->
+<div id="dashboard-tab" class="tab-content active px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Welcome back, Michael!</h2>
+<p class="text-sm text-gray-500">Thursday, April 24, 2025</p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-white rounded shadow p-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium">Live Lectures</h3>
+<div class="w-6 h-6 flex items-center justify-center bg-primary/10 rounded-full">
+<i class="ri-live-line text-primary ri-sm"></i>
+</div>
+</div>
+<p class="text-xs text-gray-500 mb-1">Next class in</p>
+<p class="text-lg font-semibold">45 min</p>
+<div id="upcoming-lecture" class="mt-2 text-xs text-primary font-medium cursor-pointer">Physics • 11:30 AM</div>
+<!-- Lecture Details Modal -->
+<div id="lecture-details-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col max-w-sm mx-auto mt-20">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h3 class="font-medium text-lg">Upcoming Lecture Details</h3>
+<button id="close-lecture-details" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4 flex-1">
+<div class="mb-4">
+<h4 class="font-medium mb-1">Physics: Quantum Mechanics</h4>
+<p class="text-sm text-gray-600">An introduction to wave-particle duality and fundamental quantum principles.</p>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-user-line text-gray-400"></i>
+</div>
+<span class="text-sm">Prof. Richard Feynman</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400"></i>
+</div>
+<span class="text-sm">11:30 AM - 01:00 PM</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-line text-gray-400"></i>
+</div>
+<span class="text-sm">Thursday, April 24, 2025</span>
+</div>
+</div>
+<div class="bg-gray-50 rounded p-3 mb-4">
+<h5 class="text-sm font-medium mb-2">Topics to be covered:</h5>
+<ul class="text-sm text-gray-600 space-y-1">
+<li>• Wave functions and probability</li>
+<li>• Schrödinger equation</li>
+<li>• Quantum tunneling effects</li>
+</ul>
+</div>
+</div>
+<div class="p-4 border-t space-y-3">
+<button id="join-lecture-modal" class="w-full py-2 bg-primary text-white text-sm font-medium rounded-button">Join Lecture</button>
+<div class="flex gap-2">
+<button id="set-reminder" class="flex-1 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-button">
+<div class="flex items-center justify-center gap-1">
+<i class="ri-notification-line"></i>
+<span>Set Reminder</span>
+</div>
+</button>
+<button id="view-materials" class="flex-1 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-button">
+<div class="flex items-center justify-center gap-1">
+<i class="ri-book-open-line"></i>
+<span>View Materials</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium">Homework</h3>
+<div class="w-6 h-6 flex items-center justify-center bg-orange-100 rounded-full">
+<i class="ri-edit-line text-orange-500 ri-sm"></i>
+</div>
+</div>
+<p class="text-xs text-gray-500 mb-1">Pending tasks</p>
+<p class="text-lg font-semibold">3</p>
+<div id="due-tomorrow-btn" class="mt-2 text-xs text-orange-500 font-medium cursor-pointer">Due tomorrow</div>
+<!-- Homework Details Modal -->
+<div id="homework-details-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col max-w-sm mx-auto mt-20">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h3 class="font-medium text-lg">Due Tomorrow</h3>
+<button id="close-homework-details" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4 flex-1 overflow-y-auto">
+<div class="space-y-4">
+<div class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<h4 class="font-medium">Physics Problem Set</h4>
+<span class="text-xs text-red-500 font-medium">Due in 20h 45m</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">Quantum Mechanics - 10 problems</p>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+<div class="bg-red-500 h-1.5 rounded-full" style="width: 30%"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">3/10 completed</span>
+<a href="https://readdy.ai/home/ac9d40ff-a1c0-423e-b7e1-1c51c9b61898/34e6b993-80a2-4277-8c3e-fa413eb83113" data-readdy="true">
+  <button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button">Continue</button>
+</a>
+</div>
+</div>
+<div class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<h4 class="font-medium">Chemistry Lab Report</h4>
+<span class="text-xs text-red-500 font-medium">Due in 22h 30m</span>
+</div>
+<p class="text-sm text-gray-600 mb-3">Organic Reactions Analysis</p>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+<div class="bg-red-500 h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">60% completed</span>
+<a href="https://readdy.ai/home/ac9d40ff-a1c0-423e-b7e1-1c51c9b61898/34e6b993-80a2-4277-8c3e-fa413eb83113" data-readdy="true">
+  <button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button">Continue</button>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t">
+<button id="view-all-homework" class="w-full py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-button">View All Homework</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium">Test Results</h3>
+<div class="w-6 h-6 flex items-center justify-center bg-secondary/10 rounded-full">
+<i class="ri-bar-chart-line text-secondary ri-sm"></i>
+</div>
+</div>
+<p class="text-xs text-gray-500 mb-1">Chemistry Test</p>
+<p class="text-lg font-semibold">92%</p>
+<div id="performance-rank" class="mt-2 text-xs text-secondary font-medium cursor-pointer">Top 5% in class</div>
+<!-- Performance Analytics Modal -->
+<div id="performance-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col max-w-sm mx-auto mt-20">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h3 class="font-medium text-lg">Performance Analytics</h3>
+<button id="close-performance-modal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4 flex-1 overflow-y-auto">
+<!-- Percentile Section -->
+<div class="mb-6">
+<h4 class="text-sm font-medium mb-3">Your Position in Class</h4>
+<div class="relative h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+<div class="absolute left-0 top-0 h-full bg-primary" style="width: 95%"></div>
+</div>
+<div class="flex items-center justify-between text-xs text-gray-500">
+<span>Bottom 50%</span>
+<span>Top 5%</span>
+</div>
+</div>
+<!-- Score Distribution -->
+<div class="mb-6">
+<h4 class="text-sm font-medium mb-3">Score Distribution</h4>
+<div id="distribution-chart" class="w-full h-40"></div>
+</div>
+<!-- Subject Rankings -->
+<div class="mb-6">
+<h4 class="text-sm font-medium mb-3">Subject Rankings</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-sm">Physics</span>
+<span class="text-sm font-medium text-primary">Rank 3/120</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm">Chemistry</span>
+<span class="text-sm font-medium text-primary">Rank 5/120</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm">Mathematics</span>
+<span class="text-sm font-medium text-primary">Rank 8/120</span>
+</div>
+</div>
+</div>
+<!-- Strengths & Improvements -->
+<div class="mb-6">
+<h4 class="text-sm font-medium mb-3">Analysis</h4>
+<div class="bg-green-50 p-3 rounded mb-3">
+<h5 class="text-sm font-medium text-green-700 mb-2">Strengths</h5>
+<ul class="text-sm text-green-600 space-y-1">
+<li>• Excellent problem-solving in Quantum Physics</li>
+<li>• Strong grasp of Organic Chemistry concepts</li>
+<li>• Consistent performance in weekly tests</li>
+</ul>
+</div>
+<div class="bg-orange-50 p-3 rounded">
+<h5 class="text-sm font-medium text-orange-700 mb-2">Areas for Improvement</h5>
+<ul class="text-sm text-orange-600 space-y-1">
+<li>• Review Calculus fundamentals</li>
+<li>• Practice more numerical problems</li>
+<li>• Increase speed in problem-solving</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="p-4 border-t space-y-3">
+<button id="set-goals-btn" class="w-full py-2 bg-primary text-white text-sm font-medium rounded-button">Set Improvement Goals</button>
+<button id="share-results-btn" class="w-full py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-button">Share Results</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium">Notices</h3>
+<div class="w-6 h-6 flex items-center justify-center bg-red-100 rounded-full">
+<i class="ri-notification-2-line text-red-500 ri-sm"></i>
+</div>
+</div>
+<p class="text-xs text-gray-500 mb-1">New updates</p>
+<p class="text-lg font-semibold">2</p>
+<div class="mt-2 text-xs text-red-500 font-medium cursor-pointer">Check now</div>
+</div>
+</div>
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Today's Schedule</h3>
+<a href="#" class="text-xs text-primary cursor-pointer">View all</a>
+</div>
+<div class="bg-white rounded shadow p-4 mb-3">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<i class="ri-microscope-line text-primary"></i>
+</div>
+<div class="w-0.5 h-full bg-gray-200 my-1"></div>
+</div>
+<div>
+<h4 class="font-medium">Physics</h4>
+<p class="text-xs text-gray-500 mb-2">Quantum Mechanics</p>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">11:30 AM - 01:00 PM</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-user-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Prof. Richard Feynman</span>
+</div>
+<button id="join-live-btn" class="mt-3 px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Join Live</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 mb-3">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+<i class="ri-flask-line text-green-600"></i>
+</div>
+<div class="w-0.5 h-full bg-gray-200 my-1"></div>
+</div>
+<div>
+<h4 class="font-medium">Chemistry</h4>
+<p class="text-xs text-gray-500 mb-2">Organic Reactions</p>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">02:00 PM - 03:30 PM</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-user-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Dr. Marie Curie</span>
+</div>
+<button class="mt-3 px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Upcoming</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+<i class="ri-numbers-line text-blue-600"></i>
+</div>
+</div>
+<div>
+<h4 class="font-medium">Mathematics</h4>
+<p class="text-xs text-gray-500 mb-2">Calculus Applications</p>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">04:00 PM - 05:30 PM</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-user-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Prof. Katherine Johnson</span>
+</div>
+<button class="mt-3 px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Upcoming</button>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Performance Overview</h3>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div id="performance-chart" class="w-full h-48"></div>
+</div>
+</div>
+</div>
+<!-- Live Lectures Tab -->
+<div id="lectures-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Live Lectures</h2>
+<p class="text-sm text-gray-500">Access your online classes</p>
+</div>
+<div class="flex items-center gap-2 mb-6 overflow-x-auto py-1">
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Today</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Tomorrow</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">This Week</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Recordings</button>
+</div>
+<div class="mb-6">
+<div class="bg-white rounded shadow p-4 mb-4 border-l-4 border-primary">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+<span class="text-xs font-medium text-red-500">LIVE NOW</span>
+</div>
+<span class="text-xs text-gray-500">Started 15 min ago</span>
+</div>
+<h3 class="font-medium mb-1">Physics: Quantum Mechanics</h3>
+<p class="text-xs text-gray-500 mb-3">Prof. Richard Feynman</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">11:30 AM - 01:00 PM</span>
+</div>
+<button id="join-lecture-btn" class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Join Now</button>
+<!-- Video Conference Modal -->
+<div id="conference-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col">
+<div class="p-4 border-b flex items-center justify-between">
+<div>
+<h3 class="font-medium text-lg">Physics: Quantum Mechanics</h3>
+<p class="text-sm text-gray-500">Prof. Richard Feynman</p>
+</div>
+<button id="leave-conference" class="px-3 py-1.5 bg-red-500 text-white text-xs font-medium rounded-button flex items-center gap-1">
+<i class="ri-door-open-line"></i>
+Leave
+</button>
+</div>
+<div class="flex-1 flex">
+<!-- Main Video Area -->
+<div class="flex-1 bg-gray-900 p-4">
+<div class="w-full h-full bg-black rounded-lg relative">
+<img src="https://readdy.ai/api/search-image?query=professional%20male%20professor%20teaching%20physics%2C%20standing%20near%20whiteboard%2C%20educational%20setting%2C%20high%20quality&width=800&height=600&seq=10&orientation=landscape" alt="Teacher Stream" class="w-full h-full object-cover rounded-lg">
+<div class="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+Prof. Richard Feynman
+</div>
+</div>
+</div>
+<!-- Sidebar -->
+<div class="w-64 border-l flex flex-col">
+<!-- Participants -->
+<div class="p-4 border-b">
+<h4 class="text-sm font-medium mb-3">Participants (24)</h4>
+<div class="grid grid-cols-2 gap-2">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=student%20headshot%2C%20professional%20portrait%2C%20neutral%20background&width=100&height=100&seq=11&orientation=squarish" alt="Student" class="w-full aspect-square object-cover rounded">
+<div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+</div>
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=student%20headshot%2C%20professional%20portrait%2C%20neutral%20background&width=100&height=100&seq=12&orientation=squarish" alt="Student" class="w-full aspect-square object-cover rounded">
+<div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+</div>
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=student%20headshot%2C%20professional%20portrait%2C%20neutral%20background&width=100&height=100&seq=13&orientation=squarish" alt="Student" class="w-full aspect-square object-cover rounded">
+<div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+</div>
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=student%20headshot%2C%20professional%20portrait%2C%20neutral%20background&width=100&height=100&seq=14&orientation=squarish" alt="Student" class="w-full aspect-square object-cover rounded">
+<div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Chat -->
+<div class="flex-1 flex flex-col">
+<div class="p-4 border-b">
+<h4 class="text-sm font-medium">Chat</h4>
+</div>
+<div class="flex-1 p-4 space-y-4 overflow-y-auto">
+<div class="flex gap-2">
+<img src="https://readdy.ai/api/search-image?query=student%20headshot%2C%20professional%20portrait%2C%20neutral%20background&width=50&height=50&seq=15&orientation=squarish" alt="Student" class="w-6 h-6 rounded-full">
+<div>
+<p class="text-xs font-medium">Sarah Chen</p>
+<p class="text-xs bg-gray-100 rounded-lg p-2 mt-1">Could you explain the wave function again?</p>
+</div>
+</div>
+<div class="flex gap-2">
+<img src="https://readdy.ai/api/search-image?query=professional%20male%20professor%20teaching%20physics%20headshot&width=50&height=50&seq=16&orientation=squarish" alt="Professor" class="w-6 h-6 rounded-full">
+<div>
+<p class="text-xs font-medium">Prof. Richard Feynman</p>
+<p class="text-xs bg-primary/10 text-primary rounded-lg p-2 mt-1">Of course! Let me draw it on the board.</p>
+</div>
+</div>
+</div>
+<div class="p-4 border-t">
+<div class="relative">
+<input type="text" placeholder="Type a message..." class="w-full pr-10 py-2 pl-3 bg-gray-100 rounded-full text-sm">
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-send-plane-fill"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Controls -->
+<div class="p-4 border-t flex items-center justify-center gap-4">
+<button id="toggle-mic" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center transition-all duration-200">
+<i class="ri-mic-line text-gray-700 transition-all duration-200"></i>
+</button>
+<button id="toggle-camera" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+<i class="ri-camera-line text-gray-700"></i>
+</button>
+<button id="toggle-screen" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+<i class="ri-computer-line text-gray-700"></i>
+</button>
+<button id="toggle-chat" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+<i class="ri-message-3-line text-gray-700"></i>
+</button>
+<button id="raise-hand" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+<i class="ri-hand-line text-gray-700"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 mb-4">
+<h3 class="font-medium mb-1">Chemistry: Organic Reactions</h3>
+<p class="text-xs text-gray-500 mb-3">Dr. Marie Curie</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">02:00 PM - 03:30 PM</span>
+</div>
+<button class="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Upcoming</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4">
+<h3 class="font-medium mb-1">Mathematics: Calculus Applications</h3>
+<p class="text-xs text-gray-500 mb-3">Prof. Katherine Johnson</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-time-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">04:00 PM - 05:30 PM</span>
+</div>
+<button class="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Upcoming</button>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Recent Recordings</h3>
+<a href="#" class="text-xs text-primary cursor-pointer">View all</a>
+</div>
+<div class="bg-white rounded shadow mb-4">
+<div class="h-40 bg-gray-200 rounded-t relative overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=physics%20classroom%2C%20teacher%20explaining%20quantum%20mechanics%20on%20whiteboard%2C%20educational%20setting%2C%20high%20quality&width=400&height=200&seq=2&orientation=landscape" alt="Physics Class" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center">
+<div id="play-button-1" class="w-12 h-12 bg-white/80 rounded-full flex items-center justify-center cursor-pointer">
+<i class="ri-play-fill text-primary ri-lg"></i>
+</div>
+</div>
+<!-- Video Modal -->
+<div id="video-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col">
+<div class="p-4 border-b flex items-center justify-between">
+<div>
+<h3 class="font-medium text-lg">Physics: Wave-Particle Duality</h3>
+<p class="text-sm text-gray-500">Prof. Richard Feynman • April 22, 2025 • 1h 25m</p>
+</div>
+<button id="close-video-modal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex-1 bg-black relative">
+<video id="lecture-video" class="w-full h-full" controls>
+<source src="https://example.com/lecture-video.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<div class="p-4 border-t">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<label for="playback-speed" class="text-sm">Speed:</label>
+<select id="playback-speed" class="text-sm bg-gray-100 rounded px-2 py-1">
+<option value="0.5">0.5x</option>
+<option value="1.0" selected>1.0x</option>
+<option value="1.5">1.5x</option>
+<option value="2.0">2.0x</option>
+</select>
+</div>
+<button id="toggle-captions" class="flex items-center gap-1 text-sm px-3 py-1 rounded bg-gray-100">
+<i class="ri-closed-captioning-line"></i>
+<span>CC</span>
+</button>
+<button id="add-bookmark" class="flex items-center gap-1 text-sm px-3 py-1 rounded bg-gray-100">
+<i class="ri-bookmark-line"></i>
+<span>Bookmark</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3">
+<h3 class="font-medium text-sm">Physics: Wave-Particle Duality</h3>
+<p class="text-xs text-gray-500 mb-2">Prof. Richard Feynman • April 22, 2025</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">1h 25m</span>
+<button id="download-btn" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow">
+<div class="h-40 bg-gray-200 rounded-t relative overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=chemistry%20laboratory%20class%2C%20teacher%20demonstrating%20chemical%20reactions%2C%20educational%20setting%2C%20high%20quality&width=400&height=200&seq=3&orientation=landscape" alt="Chemistry Class" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center">
+<div id="play-button-1" class="w-12 h-12 bg-white/80 rounded-full flex items-center justify-center cursor-pointer">
+<i class="ri-play-fill text-primary ri-lg"></i>
+</div>
+</div>
+<!-- Video Modal -->
+<div id="video-modal" class="fixed inset-0 bg-black/50 z-[1000] hidden">
+<div class="absolute inset-4 bg-white rounded-lg shadow-xl flex flex-col">
+<div class="p-4 border-b flex items-center justify-between">
+<div>
+<h3 class="font-medium text-lg">Physics: Wave-Particle Duality</h3>
+<p class="text-sm text-gray-500">Prof. Richard Feynman • April 22, 2025 • 1h 25m</p>
+</div>
+<button id="close-video-modal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex-1 bg-black relative">
+<video id="lecture-video" class="w-full h-full" controls>
+<source src="https://example.com/lecture-video.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<div class="p-4 border-t">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<label for="playback-speed" class="text-sm">Speed:</label>
+<select id="playback-speed" class="text-sm bg-gray-100 rounded px-2 py-1">
+<option value="0.5">0.5x</option>
+<option value="1.0" selected>1.0x</option>
+<option value="1.5">1.5x</option>
+<option value="2.0">2.0x</option>
+</select>
+</div>
+<button id="toggle-captions" class="flex items-center gap-1 text-sm px-3 py-1 rounded bg-gray-100">
+<i class="ri-closed-captioning-line"></i>
+<span>CC</span>
+</button>
+<button id="add-bookmark" class="flex items-center gap-1 text-sm px-3 py-1 rounded bg-gray-100">
+<i class="ri-bookmark-line"></i>
+<span>Bookmark</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3">
+<h3 class="font-medium text-sm">Chemistry: Reaction Mechanisms</h3>
+<p class="text-xs text-gray-500 mb-2">Dr. Marie Curie • April 21, 2025</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">1h 40m</span>
+<button id="download-btn" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Study Materials Tab -->
+<div id="materials-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Study Materials</h2>
+<p class="text-sm text-gray-500">Access your learning resources</p>
+</div>
+<div class="relative mb-6">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+<input type="text" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded text-sm" placeholder="Search materials...">
+</div>
+<div class="flex items-center gap-2 mb-6 overflow-x-auto py-1">
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">All</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Physics</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Chemistry</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Mathematics</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Biology</button>
+</div>
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Recent Materials</h3>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-list-check text-gray-600 ri-sm"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary/10 rounded cursor-pointer">
+<i class="ri-grid-line text-primary ri-sm"></i>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white rounded shadow p-3">
+<div class="w-12 h-12 bg-red-100 rounded flex items-center justify-center mb-3">
+<i class="ri-file-pdf-line text-red-500 ri-lg"></i>
+</div>
+<h3 class="text-sm font-medium mb-1">Quantum Physics Notes</h3>
+<p class="text-xs text-gray-500 mb-2">PDF • 4.2 MB</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 20, 2025</span>
+<button id="download-btn" class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="w-12 h-12 bg-blue-100 rounded flex items-center justify-center mb-3">
+<i class="ri-file-word-line text-blue-500 ri-lg"></i>
+</div>
+<h3 class="text-sm font-medium mb-1">Chemical Equations</h3>
+<p class="text-xs text-gray-500 mb-2">DOC • 2.8 MB</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 18, 2025</span>
+<button id="download-btn" class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="w-12 h-12 bg-green-100 rounded flex items-center justify-center mb-3">
+<i class="ri-file-excel-line text-green-500 ri-lg"></i>
+</div>
+<h3 class="text-sm font-medium mb-1">Data Analysis</h3>
+<p class="text-xs text-gray-500 mb-2">XLS • 1.5 MB</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 15, 2025</span>
+<button id="download-btn" class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-3">
+<div class="w-12 h-12 bg-purple-100 rounded flex items-center justify-center mb-3">
+<i class="ri-slideshow-line text-purple-500 ri-lg"></i>
+</div>
+<h3 class="text-sm font-medium mb-1">Calculus Concepts</h3>
+<p class="text-xs text-gray-500 mb-2">PPT • 6.7 MB</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 12, 2025</span>
+<button id="download-btn" class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer" data-filename="Final_Exam_Schedule.pdf" data-filesize="1.2">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Reference Books</h3>
+<a href="#" class="text-xs text-primary cursor-pointer">View all</a>
+</div>
+<div class="bg-white rounded shadow p-4 mb-3 flex gap-3">
+<div class="w-16 h-20 bg-gray-200 rounded overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=physics%20textbook%20cover%2C%20quantum%20mechanics%2C%20professional%20educational%20book%20design&width=100&height=150&seq=4&orientation=portrait" alt="Physics Book" class="w-full h-full object-cover">
+</div>
+<div class="flex-1">
+<h3 class="font-medium text-sm">Fundamentals of Physics</h3>
+<p class="text-xs text-gray-500 mb-2">Halliday & Resnick</p>
+<div class="flex items-center gap-1 mb-2">
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-half-fill text-yellow-400 ri-xs"></i>
+<span class="text-xs text-gray-500 ml-1">4.5</span>
+</div>
+<button class="px-3 py-1 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Read Now</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 flex gap-3">
+<div class="w-16 h-20 bg-gray-200 rounded overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=chemistry%20textbook%20cover%2C%20organic%20chemistry%2C%20professional%20educational%20book%20design&width=100&height=150&seq=5&orientation=portrait" alt="Chemistry Book" class="w-full h-full object-cover">
+</div>
+<div class="flex-1">
+<h3 class="font-medium text-sm">Organic Chemistry</h3>
+<p class="text-xs text-gray-500 mb-2">Paula Y. Bruice</p>
+<div class="flex items-center gap-1 mb-2">
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-fill text-yellow-400 ri-xs"></i>
+<i class="ri-star-line text-yellow-400 ri-xs"></i>
+<span class="text-xs text-gray-500 ml-1">4.0</span>
+</div>
+<button class="px-3 py-1 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Read Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Homework Tab -->
+<div id="homework-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Homework</h2>
+<p class="text-sm text-gray-500">Manage your assignments</p>
+</div>
+<div class="bg-white rounded shadow mb-6">
+<div class="flex">
+<button class="flex-1 py-3 text-center text-sm font-medium border-b-2 border-primary text-primary cursor-pointer">Pending (3)</button>
+<button class="flex-1 py-3 text-center text-sm font-medium text-gray-500 cursor-pointer">Completed (12)</button>
+</div>
+</div>
+<div class="mb-6">
+<div class="bg-white rounded shadow p-4 mb-4 border-l-4 border-red-500">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Physics Problem Set</h3>
+<span class="text-xs font-medium text-red-500">Due Tomorrow</span>
+</div>
+<p class="text-xs text-gray-500 mb-3">Quantum Mechanics - 10 problems</p>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+<div class="bg-red-500 h-1.5 rounded-full" style="width: 30%"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">3/10 completed</span>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Continue</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 mb-4 border-l-4 border-orange-500">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Chemistry Lab Report</h3>
+<span class="text-xs font-medium text-orange-500">Due in 2 days</span>
+</div>
+<p class="text-xs text-gray-500 mb-3">Organic Reactions Analysis</p>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+<div class="bg-orange-500 h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">60% completed</span>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Continue</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 border-l-4 border-yellow-500">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Mathematics Assignment</h3>
+<span class="text-xs font-medium text-yellow-500">Due in 3 days</span>
+</div>
+<p class="text-xs text-gray-500 mb-3">Calculus Applications - 15 problems</p>
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+<div class="bg-yellow-500 h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">7/15 completed</span>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Continue</button>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Upcoming Assignments</h3>
+</div>
+<div class="bg-white rounded shadow p-4 mb-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Biology Research Paper</h3>
+<span class="text-xs text-gray-500">Assigned: Apr 22</span>
+</div>
+<p class="text-xs text-gray-500 mb-3">Genetic Engineering Ethics</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Due: May 5, 2025</span>
+</div>
+<button class="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Start</button>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Computer Science Project</h3>
+<span class="text-xs text-gray-500">Assigned: Apr 20</span>
+</div>
+<p class="text-xs text-gray-500 mb-3">Algorithm Implementation</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Due: May 10, 2025</span>
+</div>
+<button class="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-button cursor-pointer">Start</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Notices Tab -->
+<div id="notices-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Notices</h2>
+<p class="text-sm text-gray-500">Important announcements</p>
+</div>
+<div class="mb-6">
+<div class="bg-orange-50 border border-orange-200 rounded shadow p-4 mb-4">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 flex items-center justify-center bg-orange-100 rounded-full">
+<i class="ri-pin-line text-orange-500 ri-sm"></i>
+</div>
+<span class="text-xs font-medium text-orange-500">PINNED</span>
+</div>
+<h3 class="font-medium mb-1">Summer Break Schedule</h3>
+<p class="text-xs text-gray-700 mb-3">The institute will be closed from June 15 to July 5, 2025 for summer break. Special online sessions will be available during this period.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 20, 2025</span>
+<div class="flex items-center gap-2">
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-share-line text-gray-600 ri-sm"></i>
+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-bookmark-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-6 overflow-x-auto py-1">
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">All</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Academic</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Exams</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Events</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Holidays</button>
+</div>
+<div>
+<div class="bg-white rounded shadow p-4 mb-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Academic</span>
+</div>
+<h3 class="font-medium mb-1">Mock Test Series</h3>
+<p class="text-xs text-gray-700 mb-3">A series of mock tests will be conducted for all subjects starting May 1, 2025. The schedule has been updated in the calendar.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 23, 2025</span>
+<div class="flex items-center gap-2">
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-share-line text-gray-600 ri-sm"></i>
+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-bookmark-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 mb-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Events</span>
+</div>
+<h3 class="font-medium mb-1">Science Exhibition</h3>
+<p class="text-xs text-gray-700 mb-3">Annual Science Exhibition will be held on May 10, 2025. Students interested in participating should register by April 30.</p>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 22, 2025</span>
+<div class="flex items-center gap-2">
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-share-line text-gray-600 ri-sm"></i>
+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-bookmark-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">Exams</span>
+</div>
+<h3 class="font-medium mb-1">Final Exam Schedule</h3>
+<p class="text-xs text-gray-700 mb-3">The final examination schedule for all subjects has been released. Please check the attached PDF for details.</p>
+<div class="flex items-center gap-2 p-2 bg-gray-50 rounded mb-3">
+<div class="w-8 h-8 bg-red-100 rounded flex items-center justify-center">
+<i class="ri-file-pdf-line text-red-500"></i>
+</div>
+<div>
+<p class="text-xs font-medium">Final_Exam_Schedule.pdf</p>
+<span class="text-xs text-gray-500">1.2 MB</span>
+</div>
+<button class="ml-auto w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-download-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Apr 21, 2025</span>
+<div class="flex items-center gap-2">
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-share-line text-gray-600 ri-sm"></i>
+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-bookmark-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Attendance Tab -->
+<div id="attendance-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Attendance</h2>
+<p class="text-sm text-gray-500">Track your class attendance</p>
+</div>
+<div class="bg-white rounded shadow p-4 mb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">April 2025</h3>
+<div class="flex items-center gap-2">
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-arrow-left-s-line text-gray-600 ri-sm"></i>
+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-gray-100 rounded cursor-pointer">
+<i class="ri-arrow-right-s-line text-gray-600 ri-sm"></i>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-1 mb-2 text-center">
+<span class="text-xs text-gray-500">Mon</span>
+<span class="text-xs text-gray-500">Tue</span>
+<span class="text-xs text-gray-500">Wed</span>
+<span class="text-xs text-gray-500">Thu</span>
+<span class="text-xs text-gray-500">Fri</span>
+<span class="text-xs text-gray-500">Sat</span>
+<span class="text-xs text-gray-500">Sun</span>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center">
+<div class="attendance-day text-gray-300">30</div>
+<div class="attendance-day text-gray-300">31</div>
+<div class="attendance-day present">1</div>
+<div class="attendance-day present">2</div>
+<div class="attendance-day present">3</div>
+<div class="attendance-day holiday">4</div>
+<div class="attendance-day holiday">5</div>
+<div class="attendance-day present">6</div>
+<div class="attendance-day present">7</div>
+<div class="attendance-day present">8</div>
+<div class="attendance-day absent">9</div>
+<div class="attendance-day present">10</div>
+<div class="attendance-day holiday">11</div>
+<div class="attendance-day holiday">12</div>
+<div class="attendance-day present">13</div>
+<div class="attendance-day present">14</div>
+<div class="attendance-day present">15</div>
+<div class="attendance-day present">16</div>
+<div class="attendance-day present">17</div>
+<div class="attendance-day holiday">18</div>
+<div class="attendance-day holiday">19</div>
+<div class="attendance-day present">20</div>
+<div class="attendance-day present">21</div>
+<div class="attendance-day present">22</div>
+<div class="attendance-day present">23</div>
+<div class="attendance-day present">24</div>
+<div class="attendance-day holiday">25</div>
+<div class="attendance-day holiday">26</div>
+<div class="attendance-day">27</div>
+<div class="attendance-day">28</div>
+<div class="attendance-day">29</div>
+<div class="attendance-day">30</div>
+<div class="attendance-day text-gray-300">1</div>
+<div class="attendance-day text-gray-300">2</div>
+<div class="attendance-day text-gray-300">3</div>
+</div>
+<div class="flex items-center justify-center gap-6 mt-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-green-500 rounded-full"></div>
+<span class="text-xs">Present</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-red-500 rounded-full"></div>
+<span class="text-xs">Absent</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-orange-500 rounded-full"></div>
+<span class="text-xs">Holiday</span>
+</div>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4 mb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Attendance Summary</h3>
+</div>
+<div class="flex items-center justify-between mb-4">
+<div class="text-center">
+<div class="w-12 h-12 rounded-full border-4 border-green-500 flex items-center justify-center mx-auto mb-1">
+<span class="font-semibold">95%</span>
+</div>
+<span class="text-xs">Physics</span>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 rounded-full border-4 border-green-500 flex items-center justify-center mx-auto mb-1">
+<span class="font-semibold">92%</span>
+</div>
+<span class="text-xs">Chemistry</span>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 rounded-full border-4 border-orange-500 flex items-center justify-center mx-auto mb-1">
+<span class="font-semibold">85%</span>
+</div>
+<span class="text-xs">Mathematics</span>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 rounded-full border-4 border-green-500 flex items-center justify-center mx-auto mb-1">
+<span class="font-semibold">90%</span>
+</div>
+<span class="text-xs">Biology</span>
+</div>
+</div>
+<div class="text-center">
+<div class="inline-block px-4 py-2 bg-primary/10 rounded">
+<span class="text-sm font-medium text-primary">Overall: 91% Attendance</span>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Leave Applications</h3>
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-button cursor-pointer">Apply Leave</button>
+</div>
+<div class="bg-white rounded shadow p-4 mb-3">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Medical Leave</h3>
+<span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Approved</span>
+</div>
+<p class="text-xs text-gray-700 mb-3">Reason: Fever and cold</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Apr 9, 2025</span>
+</div>
+<span class="text-xs text-gray-500">Applied on: Apr 8, 2025</span>
+</div>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Family Function</h3>
+<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">Pending</span>
+</div>
+<p class="text-xs text-gray-700 mb-3">Reason: Sister's wedding ceremony</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-calendar-line text-gray-400 ri-sm"></i>
+</div>
+<span class="text-xs">Apr 29-30, 2025</span>
+</div>
+<span class="text-xs text-gray-500">Applied on: Apr 22, 2025</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Test Results Tab -->
+<div id="results-tab" class="tab-content px-4 py-5">
+<div class="mb-6">
+<h2 class="text-xl font-semibold">Test Results</h2>
+<p class="text-sm text-gray-500">Track your academic performance</p>
+</div>
+<div class="bg-white rounded shadow p-4 mb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold">Performance Overview</h3>
+</div>
+<div id="results-chart" class="w-full h-48 mb-4"></div>
+<div class="flex items-center justify-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-primary rounded-full"></div>
+<span class="text-xs">Physics</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-green-500 rounded-full"></div>
+<span class="text-xs">Chemistry</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+<span class="text-xs">Mathematics</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-6 overflow-x-auto py-1">
+<button class="px-3 py-1.5 bg-primary text-white text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">All Tests</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Weekly Tests</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Monthly Tests</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-full whitespace-nowrap cursor-pointer">Mock Tests</button>
+</div>
+<div>
+<div class="bg-white rounded shadow p-4 mb-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Chemistry Weekly Test</h3>
+<span class="text-xs text-gray-500">Apr 21, 2025</span>
+</div>
+<div class="flex items-center justify-between mb-3">
+<div>
+<div class="flex items-center gap-1">
+<span class="text-lg font-semibold">92</span>
+<span class="text-xs text-gray-500">/100</span>
+</div>
+<span class="text-xs text-secondary">Top 5% in class</span>
+</div>
+<div class="w-16 h-16">
+<div class="w-full h-full rounded-full border-4 border-secondary flex items-center justify-center">
+<span class="font-semibold">A+</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mb-3">
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Correct</p>
+<p class="font-medium">23/25</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Incorrect</p>
+<p class="font-medium">2/25</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Time</p>
+<p class="font-medium">45 min</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-white text-sm font-medium rounded-button cursor-pointer">View Detailed Analysis</button>
+</div>
+<div class="bg-white rounded shadow p-4 mb-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Physics Weekly Test</h3>
+<span class="text-xs text-gray-500">Apr 19, 2025</span>
+</div>
+<div class="flex items-center justify-between mb-3">
+<div>
+<div class="flex items-center gap-1">
+<span class="text-lg font-semibold">88</span>
+<span class="text-xs text-gray-500">/100</span>
+</div>
+<span class="text-xs text-green-600">Top 10% in class</span>
+</div>
+<div class="w-16 h-16">
+<div class="w-full h-full rounded-full border-4 border-green-500 flex items-center justify-center">
+<span class="font-semibold">A</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mb-3">
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Correct</p>
+<p class="font-medium">22/25</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Incorrect</p>
+<p class="font-medium">3/25</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Time</p>
+<p class="font-medium">50 min</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-white text-sm font-medium rounded-button cursor-pointer">View Detailed Analysis</button>
+</div>
+<div class="bg-white rounded shadow p-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-medium">Mathematics Weekly Test</h3>
+<span class="text-xs text-gray-500">Apr 17, 2025</span>
+</div>
+<div class="flex items-center justify-between mb-3">
+<div>
+<div class="flex items-center gap-1">
+<span class="text-lg font-semibold">85</span>
+<span class="text-xs text-gray-500">/100</span>
+</div>
+<span class="text-xs text-green-600">Top 15% in class</span>
+</div>
+<div class="w-16 h-16">
+<div class="w-full h-full rounded-full border-4 border-green-500 flex items-center justify-center">
+<span class="font-semibold">A</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mb-3">
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Correct</p>
+<p class="font-medium">17/20</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Incorrect</p>
+<p class="font-medium">3/20</p>
+</div>
+<div class="p-2 bg-gray-50 rounded text-center">
+<p class="text-xs text-gray-500 mb-1">Time</p>
+<p class="font-medium">55 min</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-white text-sm font-medium rounded-button cursor-pointer">View Detailed Analysis</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Tab Bar -->
+<div class="fixed bottom-0 w-full bg-white border-t shadow-sm grid grid-cols-5">
+<a href="#dashboard" class="tab-link active flex flex-col items-center justify-center py-2 cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-dashboard-line text-primary"></i>
+</div>
+<span class="text-xs mt-1 text-primary">Home</span>
+</a>
+<a href="#lectures" class="tab-link flex flex-col items-center justify-center py-2 cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-live-line text-gray-500"></i>
+</div>
+<span class="text-xs mt-1 text-gray-500">Lectures</span>
+</a>
+<a href="#materials" class="tab-link flex flex-col items-center justify-center py-2 cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-book-open-line text-gray-500"></i>
+</div>
+<span class="text-xs mt-1 text-gray-500">Materials</span>
+</a>
+<a href="#homework" class="tab-link flex flex-col items-center justify-center py-2 cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-edit-line text-gray-500"></i>
+</div>
+<span class="text-xs mt-1 text-gray-500">Homework</span>
+</a>
+<a href="#results" class="tab-link flex flex-col items-center justify-center py-2 cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-bar-chart-line text-gray-500"></i>
+</div>
+<span class="text-xs mt-1 text-gray-500">Results</span>
+</a>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Homework Details Modal Functionality
+const dueTomorrowBtn = document.getElementById('due-tomorrow-btn');
+const homeworkDetailsModal = document.getElementById('homework-details-modal');
+const closeHomeworkDetails = document.getElementById('close-homework-details');
+const viewAllHomework = document.getElementById('view-all-homework');
+dueTomorrowBtn?.addEventListener('click', () => {
+homeworkDetailsModal.classList.remove('hidden');
+});
+closeHomeworkDetails?.addEventListener('click', () => {
+homeworkDetailsModal.classList.add('hidden');
+});
+viewAllHomework?.addEventListener('click', () => {
+homeworkDetailsModal.classList.add('hidden');
+setActiveTab('#homework');
+});
+// Close modal when clicking outside
+homeworkDetailsModal?.addEventListener('click', (e) => {
+if (e.target === homeworkDetailsModal) {
+homeworkDetailsModal.classList.add('hidden');
+}
+});
+// Handle keyboard events for homework modal
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !homeworkDetailsModal?.classList.contains('hidden')) {
+homeworkDetailsModal.classList.add('hidden');
+}
+});
+// Performance Analytics Modal
+const performanceRank = document.getElementById('performance-rank');
+const performanceModal = document.getElementById('performance-modal');
+const closePerformanceModal = document.getElementById('close-performance-modal');
+const setGoalsBtn = document.getElementById('set-goals-btn');
+const shareResultsBtn = document.getElementById('share-results-btn');
+// Initialize distribution chart
+const distributionChart = echarts.init(document.getElementById('distribution-chart'));
+const distributionOption = {
+tooltip: {
+trigger: 'axis',
+axisPointer: {
+type: 'shadow'
+}
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+containLabel: true
+},
+xAxis: [{
+type: 'category',
+data: ['60-70', '70-80', '80-90', '90-100'],
+axisTick: {
+alignWithLabel: true
+}
+}],
+yAxis: [{
+type: 'value'
+}],
+series: [{
+name: 'Students',
+type: 'bar',
+barWidth: '60%',
+data: [10, 25, 45, 20],
+itemStyle: {
+color: '#4F46E5'
+}
+}]
+};
+distributionChart.setOption(distributionOption);
+performanceRank?.addEventListener('click', () => {
+performanceModal.classList.remove('hidden');
+distributionChart.resize();
+});
+closePerformanceModal?.addEventListener('click', () => {
+performanceModal.classList.add('hidden');
+});
+performanceModal?.addEventListener('click', (e) => {
+if (e.target === performanceModal) {
+performanceModal.classList.add('hidden');
+}
+});
+setGoalsBtn?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-flag-line"></i>
+<span>Setting new improvement goals</span>
+</div>
+`);
+});
+shareResultsBtn?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-share-line"></i>
+<span>Sharing performance results</span>
+</div>
+`);
+});
+// Handle window resize for distribution chart
+window.addEventListener('resize', () => {
+if (!performanceModal.classList.contains('hidden')) {
+distributionChart.resize();
+}
+});
+// Join Live Button Functionality
+const joinLiveBtn = document.getElementById('join-live-btn');
+joinLiveBtn?.addEventListener('click', () => {
+document.getElementById('conference-modal').classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+// Lecture Details Modal Functionality
+const lectureDetailsModal = document.getElementById('lecture-details-modal');
+const upcomingLecture = document.getElementById('upcoming-lecture');
+const closeLectureDetails = document.getElementById('close-lecture-details');
+const joinLectureModal = document.getElementById('join-lecture-modal');
+const setReminder = document.getElementById('set-reminder');
+const viewMaterials = document.getElementById('view-materials');
+upcomingLecture?.addEventListener('click', () => {
+lectureDetailsModal.classList.remove('hidden');
+});
+closeLectureDetails?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+});
+joinLectureModal?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+document.getElementById('conference-modal').classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+setReminder?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-notification-line"></i>
+<span>Reminder set for Physics lecture at 11:30 AM</span>
+</div>
+`);
+});
+viewMaterials?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+// Switch to Materials tab
+setActiveTab('#materials');
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-book-open-line"></i>
+<span>Viewing Physics lecture materials</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+lectureDetailsModal?.addEventListener('click', (e) => {
+if (e.target === lectureDetailsModal) {
+lectureDetailsModal.classList.add('hidden');
+}
+});
+function showToast(message, type = 'info', duration = 3000) {
+const container = document.getElementById('toast-container');
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = message;
+container.appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => container.removeChild(toast), 300);
+}, duration);
+}
+function formatBytes(bytes) {
+if (bytes < 1024) return bytes + ' B';
+else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+else return (bytes / 1048576).toFixed(1) + ' MB';
+}
+function checkStorageSpace() {
+return new Promise((resolve) => {
+if ('storage' in navigator && 'estimate' in navigator.storage) {
+navigator.storage.estimate().then(({usage, quota}) => {
+const available = quota - usage;
+resolve(available > 10 * 1024 * 1024); // Require at least 10MB free
+});
+} else {
+resolve(true); // Can't check, assume enough space
+}
+});
+}
+function simulateDownload(filename, filesize) {
+return new Promise((resolve, reject) => {
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = `
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<i class="ri-download-line text-primary"></i>
+<span class="text-sm font-medium">${filename}</span>
+</div>
+<span class="text-xs text-gray-500">${filesize} MB</span>
+</div>
+<div class="progress-bar">
+<div class="progress-bar-fill"></div>
+</div>
+`;
+document.getElementById('toast-container').appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+const progressBar = toast.querySelector('.progress-bar-fill');
+let progress = 0;
+const interval = setInterval(() => {
+progress += 2;
+progressBar.style.width = `${progress}%`;
+if (progress >= 100) {
+clearInterval(interval);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => toast.remove(), 300);
+resolve();
+}, 500);
+}
+}, 50);
+});
+}
+document.addEventListener('click', async function(e) {
+const downloadBtn = e.target.closest('#download-btn');
+if (!downloadBtn) return;
+const filename = downloadBtn.dataset.filename;
+const filesize = downloadBtn.dataset.filesize;
+const hasSpace = await checkStorageSpace();
+if (!hasSpace) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Insufficient storage space</span>
+</div>
+`, 'error');
+return;
+}
+try {
+await simulateDownload(filename, filesize);
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>${filename} downloaded successfully</span>
+</div>
+`, 'success');
+} catch (error) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Download failed. Please try again.</span>
+</div>
+`, 'error');
+}
+});
+// Video Conference Modal
+const conferenceModal = document.getElementById('conference-modal');
+const joinButton = document.getElementById('join-lecture-btn');
+const leaveButton = document.getElementById('leave-conference');
+const toggleMic = document.getElementById('toggle-mic');
+const toggleCamera = document.getElementById('toggle-camera');
+const toggleScreen = document.getElementById('toggle-screen');
+const toggleChat = document.getElementById('toggle-chat');
+const raiseHand = document.getElementById('raise-hand');
+joinButton?.addEventListener('click', () => {
+conferenceModal.classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+leaveButton?.addEventListener('click', () => {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+});
+toggleMic?.addEventListener('click', function() {
+const isMuted = this.classList.contains('bg-primary');
+// Toggle button states
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+// Toggle icon
+const icon = this.querySelector('i');
+icon.classList.toggle('ri-mic-line');
+icon.classList.toggle('ri-mic-off-line');
+// Show toast notification
+showToast(`
+<div class="flex items-center gap-2 ${isMuted ? 'text-green-600' : 'text-blue-600'}">
+<i class="${isMuted ? 'ri-mic-line' : 'ri-mic-off-line'}"></i>
+<span>Microphone ${isMuted ? 'unmuted' : 'muted'}</span>
+</div>
+`, isMuted ? 'success' : 'info', 2000);
+});
+toggleCamera?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+const icon = this.querySelector('i');
+icon.classList.toggle('ri-camera-line');
+icon.classList.toggle('ri-camera-off-line');
+});
+toggleScreen?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+});
+toggleChat?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+});
+raiseHand?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-hand-line"></i>
+<span>Hand raised</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+conferenceModal?.addEventListener('click', (e) => {
+if (e.target === conferenceModal) {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+}
+});
+// Handle keyboard events
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !conferenceModal?.classList.contains('hidden')) {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+}
+});
+// Video player functionality
+const videoModal = document.getElementById('video-modal');
+const playButton = document.getElementById('play-button-1');
+const closeVideoModal = document.getElementById('close-video-modal');
+const lectureVideo = document.getElementById('lecture-video');
+const playbackSpeed = document.getElementById('playback-speed');
+const toggleCaptions = document.getElementById('toggle-captions');
+const addBookmark = document.getElementById('add-bookmark');
+playButton.addEventListener('click', () => {
+videoModal.classList.remove('hidden');
+lectureVideo.play();
+});
+closeVideoModal.addEventListener('click', () => {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+});
+playbackSpeed.addEventListener('change', (e) => {
+lectureVideo.playbackRate = parseFloat(e.target.value);
+});
+let captionsEnabled = false;
+toggleCaptions.addEventListener('click', () => {
+captionsEnabled = !captionsEnabled;
+toggleCaptions.classList.toggle('bg-primary');
+toggleCaptions.classList.toggle('text-white');
+// Toggle captions logic here
+});
+addBookmark.addEventListener('click', () => {
+const currentTime = lectureVideo.currentTime;
+const timestamp = new Date(currentTime * 1000).toISOString().substr(11, 8);
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-bookmark-line"></i>
+<span>Bookmark added at ${timestamp}</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+videoModal.addEventListener('click', (e) => {
+if (e.target === videoModal) {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+}
+});
+// Handle keyboard events
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !videoModal.classList.contains('hidden')) {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+}
+});
+// Navigation toggle
+const navToggle = document.getElementById('nav-toggle');
+const closeNav = document.getElementById('close-nav');
+const sidebar = document.getElementById('sidebar');
+navToggle.addEventListener('click', function() {
+sidebar.classList.toggle('-translate-x-full');
+});
+closeNav.addEventListener('click', function() {
+sidebar.classList.add('-translate-x-full');
+});
+// Tab navigation
+const tabLinks = document.querySelectorAll('.tab-link');
+const navItems = document.querySelectorAll('.nav-item');
+const tabContents = document.querySelectorAll('.tab-content');
+function setActiveTab(tabId) {
+// Update tab links
+tabLinks.forEach(link => {
+if (link.getAttribute('href') === tabId) {
+link.classList.add('active');
+const icon = link.querySelector('i');
+const text = link.querySelector('span');
+icon.classList.add('text-primary');
+icon.classList.remove('text-gray-500');
+text.classList.add('text-primary');
+text.classList.remove('text-gray-500');
+} else {
+link.classList.remove('active');
+const icon = link.querySelector('i');
+const text = link.querySelector('span');
+icon.classList.remove('text-primary');
+icon.classList.add('text-gray-500');
+text.classList.remove('text-primary');
+text.classList.add('text-gray-500');
+}
+});
+// Update nav items
+navItems.forEach(item => {
+if (item.getAttribute('href') === tabId) {
+item.classList.add('active');
+} else {
+item.classList.remove('active');
+}
+});
+// Show active tab content
+tabContents.forEach(content => {
+if (content.id === tabId.substring(1) + '-tab') {
+content.classList.add('active');
+} else {
+content.classList.remove('active');
+}
+});
+// Close sidebar on mobile
+sidebar.classList.add('-translate-x-full');
+}
+tabLinks.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const tabId = this.getAttribute('href');
+setActiveTab(tabId);
+});
+});
+navItems.forEach(item => {
+item.addEventListener('click', function(e) {
+e.preventDefault();
+const tabId = this.getAttribute('href');
+setActiveTab(tabId);
+});
+});
+// Initialize performance chart
+const performanceChart = echarts.init(document.getElementById('performance-chart'));
+const performanceOption = {
+tooltip: {
+trigger: 'axis'
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+containLabel: true
+},
+xAxis: {
+type: 'category',
+boundaryGap: false,
+data: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5']
+},
+yAxis: {
+type: 'value',
+min: 60,
+max: 100
+},
+series: [
+{
+name: 'Physics',
+type: 'line',
+data: [75, 82, 78, 85, 88],
+smooth: true,
+lineStyle: {
+color: '#4F46E5'
+},
+itemStyle: {
+color: '#4F46E5'
+}
+},
+{
+name: 'Chemistry',
+type: 'line',
+data: [80, 85, 90, 88, 92],
+smooth: true,
+lineStyle: {
+color: '#10B981'
+},
+itemStyle: {
+color: '#10B981'
+}
+},
+{
+name: 'Mathematics',
+type: 'line',
+data: [70, 75, 80, 82, 85],
+smooth: true,
+lineStyle: {
+color: '#F59E0B'
+},
+itemStyle: {
+color: '#F59E0B'
+}
+}
+]
+};
+performanceChart.setOption(performanceOption);
+// Initialize results chart
+const resultsChart = echarts.init(document.getElementById('results-chart'));
+const resultsOption = {
+tooltip: {
+trigger: 'axis',
+axisPointer: {
+type: 'shadow'
+}
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+containLabel: true
+},
+xAxis: [
+{
+type: 'category',
+data: ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'],
+axisTick: {
+alignWithLabel: true
+}
+}
+],
+yAxis: [
+{
+type: 'value',
+min: 60,
+max: 100
+}
+],
+series: [
+{
+name: 'Physics',
+type: 'bar',
+barWidth: '15%',
+data: [78, 82, 85, 88, 90],
+itemStyle: {
+color: '#4F46E5'
+}
+},
+{
+name: 'Chemistry',
+type: 'bar',
+barWidth: '15%',
+data: [82, 85, 88, 90, 92],
+itemStyle: {
+color: '#10B981'
+}
+},
+{
+name: 'Mathematics',
+type: 'bar',
+barWidth: '15%',
+data: [75, 78, 80, 82, 85],
+itemStyle: {
+color: '#F59E0B'
+}
+}
+]
+};
+resultsChart.setOption(resultsOption);
+// Handle window resize for charts
+window.addEventListener('resize', function() {
+performanceChart.resize();
+resultsChart.resize();
+});
+});
+</script>
+<div id="toast-container" class="toast-container">
+<style>
+.toast-container {
+position: fixed;
+bottom: 80px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 1000;
+width: calc(100% - 32px);
+max-width: 343px;
+}
+.toast {
+background-color: white;
+border-radius: 8px;
+padding: 16px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+margin-bottom: 8px;
+opacity: 0;
+transform: translateY(16px);
+transition: all 0.3s ease;
+}
+.toast.show {
+opacity: 1;
+transform: translateY(0);
+}
+.progress-bar {
+width: 100%;
+height: 4px;
+background-color: #E5E7EB;
+border-radius: 2px;
+overflow: hidden;
+margin-top: 8px;
+}
+.progress-bar-fill {
+height: 100%;
+background-color: #4F46E5;
+width: 0%;
+transition: width 0.3s ease;
+}
+</style>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Homework Details Modal Functionality
+const dueTomorrowBtn = document.getElementById('due-tomorrow-btn');
+const homeworkDetailsModal = document.getElementById('homework-details-modal');
+const closeHomeworkDetails = document.getElementById('close-homework-details');
+const viewAllHomework = document.getElementById('view-all-homework');
+dueTomorrowBtn?.addEventListener('click', () => {
+homeworkDetailsModal.classList.remove('hidden');
+});
+closeHomeworkDetails?.addEventListener('click', () => {
+homeworkDetailsModal.classList.add('hidden');
+});
+viewAllHomework?.addEventListener('click', () => {
+homeworkDetailsModal.classList.add('hidden');
+setActiveTab('#homework');
+});
+// Close modal when clicking outside
+homeworkDetailsModal?.addEventListener('click', (e) => {
+if (e.target === homeworkDetailsModal) {
+homeworkDetailsModal.classList.add('hidden');
+}
+});
+// Handle keyboard events for homework modal
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !homeworkDetailsModal?.classList.contains('hidden')) {
+homeworkDetailsModal.classList.add('hidden');
+}
+});
+// Performance Analytics Modal
+const performanceRank = document.getElementById('performance-rank');
+const performanceModal = document.getElementById('performance-modal');
+const closePerformanceModal = document.getElementById('close-performance-modal');
+const setGoalsBtn = document.getElementById('set-goals-btn');
+const shareResultsBtn = document.getElementById('share-results-btn');
+// Initialize distribution chart
+const distributionChart = echarts.init(document.getElementById('distribution-chart'));
+const distributionOption = {
+tooltip: {
+trigger: 'axis',
+axisPointer: {
+type: 'shadow'
+}
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+containLabel: true
+},
+xAxis: [{
+type: 'category',
+data: ['60-70', '70-80', '80-90', '90-100'],
+axisTick: {
+alignWithLabel: true
+}
+}],
+yAxis: [{
+type: 'value'
+}],
+series: [{
+name: 'Students',
+type: 'bar',
+barWidth: '60%',
+data: [10, 25, 45, 20],
+itemStyle: {
+color: '#4F46E5'
+}
+}]
+};
+distributionChart.setOption(distributionOption);
+performanceRank?.addEventListener('click', () => {
+performanceModal.classList.remove('hidden');
+distributionChart.resize();
+});
+closePerformanceModal?.addEventListener('click', () => {
+performanceModal.classList.add('hidden');
+});
+performanceModal?.addEventListener('click', (e) => {
+if (e.target === performanceModal) {
+performanceModal.classList.add('hidden');
+}
+});
+setGoalsBtn?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-flag-line"></i>
+<span>Setting new improvement goals</span>
+</div>
+`);
+});
+shareResultsBtn?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-share-line"></i>
+<span>Sharing performance results</span>
+</div>
+`);
+});
+// Handle window resize for distribution chart
+window.addEventListener('resize', () => {
+if (!performanceModal.classList.contains('hidden')) {
+distributionChart.resize();
+}
+});
+// Join Live Button Functionality
+const joinLiveBtn = document.getElementById('join-live-btn');
+joinLiveBtn?.addEventListener('click', () => {
+document.getElementById('conference-modal').classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+// Lecture Details Modal Functionality
+const lectureDetailsModal = document.getElementById('lecture-details-modal');
+const upcomingLecture = document.getElementById('upcoming-lecture');
+const closeLectureDetails = document.getElementById('close-lecture-details');
+const joinLectureModal = document.getElementById('join-lecture-modal');
+const setReminder = document.getElementById('set-reminder');
+const viewMaterials = document.getElementById('view-materials');
+upcomingLecture?.addEventListener('click', () => {
+lectureDetailsModal.classList.remove('hidden');
+});
+closeLectureDetails?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+});
+joinLectureModal?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+document.getElementById('conference-modal').classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+setReminder?.addEventListener('click', () => {
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-notification-line"></i>
+<span>Reminder set for Physics lecture at 11:30 AM</span>
+</div>
+`);
+});
+viewMaterials?.addEventListener('click', () => {
+lectureDetailsModal.classList.add('hidden');
+// Switch to Materials tab
+setActiveTab('#materials');
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-book-open-line"></i>
+<span>Viewing Physics lecture materials</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+lectureDetailsModal?.addEventListener('click', (e) => {
+if (e.target === lectureDetailsModal) {
+lectureDetailsModal.classList.add('hidden');
+}
+});
+function showToast(message, type = 'info', duration = 3000) {
+const container = document.getElementById('toast-container');
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = message;
+container.appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => container.removeChild(toast), 300);
+}, duration);
+}
+function formatBytes(bytes) {
+if (bytes < 1024) return bytes + ' B';
+else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+else return (bytes / 1048576).toFixed(1) + ' MB';
+}
+function checkStorageSpace() {
+return new Promise((resolve) => {
+if ('storage' in navigator && 'estimate' in navigator.storage) {
+navigator.storage.estimate().then(({usage, quota}) => {
+const available = quota - usage;
+resolve(available > 10 * 1024 * 1024); // Require at least 10MB free
+});
+} else {
+resolve(true); // Can't check, assume enough space
+}
+});
+}
+function simulateDownload(filename, filesize) {
+return new Promise((resolve, reject) => {
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = `
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<i class="ri-download-line text-primary"></i>
+<span class="text-sm font-medium">${filename}</span>
+</div>
+<span class="text-xs text-gray-500">${filesize} MB</span>
+</div>
+<div class="progress-bar">
+<div class="progress-bar-fill"></div>
+</div>
+`;
+document.getElementById('toast-container').appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+const progressBar = toast.querySelector('.progress-bar-fill');
+let progress = 0;
+const interval = setInterval(() => {
+progress += 2;
+progressBar.style.width = `${progress}%`;
+if (progress >= 100) {
+clearInterval(interval);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => toast.remove(), 300);
+resolve();
+}, 500);
+}
+}, 50);
+});
+}
+document.addEventListener('click', async function(e) {
+const downloadBtn = e.target.closest('#download-btn');
+if (!downloadBtn) return;
+const filename = downloadBtn.dataset.filename;
+const filesize = downloadBtn.dataset.filesize;
+const hasSpace = await checkStorageSpace();
+if (!hasSpace) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Insufficient storage space</span>
+</div>
+`, 'error');
+return;
+}
+try {
+await simulateDownload(filename, filesize);
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>${filename} downloaded successfully</span>
+</div>
+`, 'success');
+} catch (error) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Download failed. Please try again.</span>
+</div>
+`, 'error');
+}
+});
+// Video Conference Modal
+const conferenceModal = document.getElementById('conference-modal');
+const joinButton = document.getElementById('join-lecture-btn');
+const leaveButton = document.getElementById('leave-conference');
+const toggleMic = document.getElementById('toggle-mic');
+const toggleCamera = document.getElementById('toggle-camera');
+const toggleScreen = document.getElementById('toggle-screen');
+const toggleChat = document.getElementById('toggle-chat');
+const raiseHand = document.getElementById('raise-hand');
+joinButton?.addEventListener('click', () => {
+conferenceModal.classList.remove('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>Connected to Physics lecture</span>
+</div>
+`, 'success');
+});
+leaveButton?.addEventListener('click', () => {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+});
+toggleMic?.addEventListener('click', function() {
+const isMuted = this.classList.contains('bg-primary');
+// Toggle button states
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+// Toggle icon
+const icon = this.querySelector('i');
+icon.classList.toggle('ri-mic-line');
+icon.classList.toggle('ri-mic-off-line');
+// Show toast notification
+showToast(`
+<div class="flex items-center gap-2 ${isMuted ? 'text-green-600' : 'text-blue-600'}">
+<i class="${isMuted ? 'ri-mic-line' : 'ri-mic-off-line'}"></i>
+<span>Microphone ${isMuted ? 'unmuted' : 'muted'}</span>
+</div>
+`, isMuted ? 'success' : 'info', 2000);
+});
+toggleCamera?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+const icon = this.querySelector('i');
+icon.classList.toggle('ri-camera-line');
+icon.classList.toggle('ri-camera-off-line');
+});
+toggleScreen?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+});
+toggleChat?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+});
+raiseHand?.addEventListener('click', function() {
+this.classList.toggle('bg-primary');
+this.classList.toggle('text-white');
+this.classList.toggle('bg-gray-100');
+this.classList.toggle('text-gray-700');
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-hand-line"></i>
+<span>Hand raised</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+conferenceModal?.addEventListener('click', (e) => {
+if (e.target === conferenceModal) {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+}
+});
+// Handle keyboard events
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !conferenceModal?.classList.contains('hidden')) {
+conferenceModal.classList.add('hidden');
+showToast(`
+<div class="flex items-center gap-2 text-blue-600">
+<i class="ri-information-line"></i>
+<span>Left the lecture</span>
+</div>
+`, 'info');
+}
+});
+// Video player functionality
+const videoModal = document.getElementById('video-modal');
+const playButton = document.getElementById('play-button-1');
+const closeVideoModal = document.getElementById('close-video-modal');
+const lectureVideo = document.getElementById('lecture-video');
+const playbackSpeed = document.getElementById('playback-speed');
+const toggleCaptions = document.getElementById('toggle-captions');
+const addBookmark = document.getElementById('add-bookmark');
+playButton.addEventListener('click', () => {
+videoModal.classList.remove('hidden');
+lectureVideo.play();
+});
+closeVideoModal.addEventListener('click', () => {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+});
+playbackSpeed.addEventListener('change', (e) => {
+lectureVideo.playbackRate = parseFloat(e.target.value);
+});
+let captionsEnabled = false;
+toggleCaptions.addEventListener('click', () => {
+captionsEnabled = !captionsEnabled;
+toggleCaptions.classList.toggle('bg-primary');
+toggleCaptions.classList.toggle('text-white');
+// Toggle captions logic here
+});
+addBookmark.addEventListener('click', () => {
+const currentTime = lectureVideo.currentTime;
+const timestamp = new Date(currentTime * 1000).toISOString().substr(11, 8);
+showToast(`
+<div class="flex items-center gap-2 text-primary">
+<i class="ri-bookmark-line"></i>
+<span>Bookmark added at ${timestamp}</span>
+</div>
+`);
+});
+// Close modal when clicking outside
+videoModal.addEventListener('click', (e) => {
+if (e.target === videoModal) {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+}
+});
+// Handle keyboard events
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && !videoModal.classList.contains('hidden')) {
+videoModal.classList.add('hidden');
+lectureVideo.pause();
+}
+});
+function showToast(message, type = 'info', duration = 3000) {
+const container = document.getElementById('toast-container');
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = message;
+container.appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => container.removeChild(toast), 300);
+}, duration);
+}
+function formatBytes(bytes) {
+if (bytes < 1024) return bytes + ' B';
+else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+else return (bytes / 1048576).toFixed(1) + ' MB';
+}
+function checkStorageSpace() {
+return new Promise((resolve) => {
+if ('storage' in navigator && 'estimate' in navigator.storage) {
+navigator.storage.estimate().then(({usage, quota}) => {
+const available = quota - usage;
+resolve(available > 10 * 1024 * 1024); // Require at least 10MB free
+});
+} else {
+resolve(true); // Can't check, assume enough space
+}
+});
+}
+function simulateDownload(filename, filesize) {
+return new Promise((resolve, reject) => {
+const toast = document.createElement('div');
+toast.className = 'toast';
+toast.innerHTML = `
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<i class="ri-download-line text-primary"></i>
+<span class="text-sm font-medium">${filename}</span>
+</div>
+<span class="text-xs text-gray-500">${filesize} MB</span>
+</div>
+<div class="progress-bar">
+<div class="progress-bar-fill"></div>
+</div>
+`;
+document.getElementById('toast-container').appendChild(toast);
+setTimeout(() => toast.classList.add('show'), 100);
+const progressBar = toast.querySelector('.progress-bar-fill');
+let progress = 0;
+const interval = setInterval(() => {
+progress += 2;
+progressBar.style.width = `${progress}%`;
+if (progress >= 100) {
+clearInterval(interval);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => toast.remove(), 300);
+resolve();
+}, 500);
+}
+}, 50);
+});
+}
+document.addEventListener('click', async function(e) {
+const downloadBtn = e.target.closest('#download-btn');
+if (!downloadBtn) return;
+const filename = downloadBtn.dataset.filename;
+const filesize = downloadBtn.dataset.filesize;
+const hasSpace = await checkStorageSpace();
+if (!hasSpace) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Insufficient storage space</span>
+</div>
+`, 'error');
+return;
+}
+try {
+await simulateDownload(filename, filesize);
+showToast(`
+<div class="flex items-center gap-2 text-green-600">
+<i class="ri-checkbox-circle-line"></i>
+<span>${filename} downloaded successfully</span>
+</div>
+`, 'success');
+} catch (error) {
+showToast(`
+<div class="flex items-center gap-2 text-red-600">
+<i class="ri-error-warning-line"></i>
+<span>Download failed. Please try again.</span>
+</div>
+`, 'error');
+}
+});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+
+/* Transition for tabs */
+.tab-content {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+.tab-content.active {
+  opacity: 1;
+  pointer-events: auto;
+  height: auto;
+}
+
+/* Toast Styling */
+.toast-container {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 32px);
+  max-width: 343px;
+}
+
+.toast {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: all 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive Enhancements */
+@media (min-width: 768px) {
+  body {
+    max-width: 768px;
+    margin: 0 auto;
+  }
+}
